@@ -1,0 +1,23 @@
+// font
+$font: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+$font-en: $font;
+
+// color
+$color-text: #000000;
+$color-main: #000000;
+
+// device
+$size-tb: 1023px;
+$size-sp: 849px;
+$size-sp_s: 639px;
+$size-sp_xs: 374px;
+
+// transition easing参考 : http://www.knockknock.jp/archives/184
+// (opacity,color)
+// cubic-bezier(0.26, 0.06, 0, 1);
+// cubic-bezier(0.18, 0.06, 0.23, 1);
+// (transform)
+// cubic-bezier(0.43, 0.05, 0.17, 1);
+// cubic-bezier(0.55, 0.05, 0.22, 0.99);
+$duration: 0.1s;
+$easing: ease;

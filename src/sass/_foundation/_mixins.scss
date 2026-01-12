@@ -1,0 +1,19 @@
+@use 'variables' as g;
+
+// splite
+@mixin splite {
+	display: block;
+	overflow: hidden;
+	text-indent: -5260px;
+}
+
+// clearfix
+@mixin clearfix {
+	zoom: 1;
+	&:after {
+		content: '';
+		display: block;
+		clear: both;
+		height: 0;
+	}
+}

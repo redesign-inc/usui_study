@@ -1,0 +1,31 @@
+networks:
+services:
+  web:
+    depends_on:
+      - mysql
+
+  mysql:
+    container_name: "${NAME}_mysql"
+    image: mysql:5.7
+    platform: 'linux/amd64'
+    restart: always
+    volumes:
+      - ./docker/mysql/data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: red
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  pma:
+    container_name: "${NAME}_pma"
+    image: phpmyadmin
+    ports:
+      - "${PMA_PORT}:80"
+    volumes:
+       - ./docker/pma/sessions:/sessions
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=mysql
+      - PMA_USER=root
+      - PMA_PASSWORD=red
+    depends_on:
+      - mysql

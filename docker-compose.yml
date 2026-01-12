@@ -1,0 +1,16 @@
+networks:
+  default:
+    name: "${NAME}"
+
+services:
+  web:
+    container_name: "${NAME}_web"
+    build: ./docker/php8.0-apahce
+    image: php8.0-apache
+    # build: ./docker/php7.4-apahce
+    # image: php7.4-apache
+    restart: always
+    ports:
+      - "${WEB_PORT}:80"
+    volumes:
+      - ./public_html:/var/www/html

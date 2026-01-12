@@ -1,0 +1,110 @@
+@use 'global' as g;
+
+/* html, body */
+html {
+	font-size: 10px;
+}
+body {
+	color: g.$color-text;
+	font-family: g.$font;
+	font-size: 1.4rem;
+	line-height: 1.72;
+	-webkit-text-size-adjust: 100%;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+// TB
+@media only screen and (max-width:g.$size-tb) {}
+// SP
+@media only screen and (max-width:g.$size-sp) {}
+
+
+/* selection */
+::-moz-selection {
+	background: g.$color-main;
+	color: #ffffff;
+}
+::selection {
+	background: g.$color-main;
+	color: #ffffff;
+}
+
+
+/* a */
+a {
+	transition: all g.$duration g.$easing 0s;
+	transition-property: border, background, color;
+	color: g.$color-main;
+}
+
+
+/* img */
+img {
+	max-width: 100%;
+	height: auto;
+}
+
+
+/* input, textarea */
+$color-placeholder: #CCCCCC;
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+input[type="password"],
+textarea {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	color: g.$color-text;
+	font-family: g.$font;
+	outline: 0;
+	appearance: none;
+	&::placeholder,
+	&:placeholder-shown,
+	&::-webkit-input-placeholder,
+	&:-moz-placeholder,
+	&::-moz-placeholder,
+	&:-ms-input-placeholder {
+		color: $color-placeholder;
+	}
+}
+input::-ms-clear {
+	visibility: hidden;
+}
+input::-ms-reveal {
+	visibility: hidden;
+}
+
+
+/* select */
+select {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	color: g.$color-text;
+	font-family: g.$font;
+	outline: 0;
+	cursor: pointer;
+	appearance: none;
+	&::-ms-expand {
+		display: none;
+	}
+}
+
+
+/* button */
+button {
+	box-sizing: border-box;
+	outline: 0;
+	cursor: pointer;
+	appearance: none;
+}
+
+
+/* svg symbols */
+.symbols {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+}

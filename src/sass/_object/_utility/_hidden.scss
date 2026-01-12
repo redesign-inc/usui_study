@@ -1,0 +1,36 @@
+@use '../../_foundation/global' as g;
+
+/* hidden */
+.pc-hidden {
+	display: none;
+}
+.pctb-hidden {
+	display: none;
+}
+// TB
+@media only screen and (max-width:g.$size-tb) {
+	.tb-hidden,
+	.tbsp-hidden {
+		display: none;
+	}
+	.pc-hidden {
+		display: block;
+	}
+	br.pc-hidden {
+		display: inline-block;
+	}
+}
+// SP
+@media only screen and (max-width:g.$size-sp) {
+	.sp-hidden {
+		display: none;
+	}
+	.tb-hidden,
+	.pctb-hidden {
+		display: block;
+	}
+	br.tb-hidden,
+	br.pctb-hidden {
+		display: inline-block;
+	}
+}

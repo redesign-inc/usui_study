@@ -1,0 +1,6 @@
+@use '../../_foundation/global' as g;
+
+// TB
+@media only screen and (max-width:g.$size-tb) {}
+// SP
+@media only screen and (max-width:g.$size-sp) {}

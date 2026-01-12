@@ -1,0 +1,5 @@
+@use '../../_foundation/global' as g;
+
+.clearfix {
+	@include g.clearfix;
+}
