@@ -1,0 +1,1 @@
+img{max-width:100%;height:auto}.popover{display:flex;justify-content:center}.popover__open{background-color:#fff;border:solid 1px red;padding:1rem;anchor-name:--my-anchor}.popover__content{position-anchor:--my-anchor;top:anchor(bottom);left:anchor(right);position-try-fallbacks:flip-block}

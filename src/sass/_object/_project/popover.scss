@@ -1,0 +1,23 @@
+@use '../../_foundation/global' as g;
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.popover {
+  display: flex;
+  justify-content: center;
+  &__open {
+    background-color: #fff;
+    border: solid 1px red;
+    padding: 1rem;
+    anchor-name: --my-anchor;
+  }
+  &__content {
+    position-anchor: --my-anchor;
+    top: anchor(bottom);   /* アンカーの下端 */
+    left: anchor(right);    /* アンカーの左端 */
+    position-try-fallbacks: flip-block;
+  }
+}

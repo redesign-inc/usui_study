@@ -1,5 +1,33 @@
 @use '../_foundation/global' as g;
 
+#canvas {
+    width: 100% !important;
+    height: 100svh !important;
+}
+nav {
+    width: 100vw;
+    height: 100svh;
+    display: grid;
+    place-content: center;
+    ul {
+        display: grid;
+        align-items: center;
+        row-gap: 1rem;
+        li {
+            text-align: center;
+            a {
+                font-size: 3rem;
+                text-decoration: none;
+                border: solid 1px;
+                display: block;
+                line-height: 1;
+                width: 100%;
+                box-sizing: border-box;
+                padding: 1rem;
+            }
+        }
+    }
+}
 // TB
 @media only screen and (max-width:g.$size-tb) {}
 // SP
