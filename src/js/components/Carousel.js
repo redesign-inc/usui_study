@@ -1,10 +1,11 @@
 'use strict';
 
 class Carousel {
-	constructor() {
+	constructor(){
 		this.changing = false;
 		this.active = 0;
 		this.slider = document.querySelector('.carousel');
+		if(!this.slider) return;
 		this.container = this.slider.querySelector('.carousel__container');
 		this.items;
 		this.length = this.container.querySelectorAll('.carousel__slide').length;
@@ -19,37 +20,58 @@ class Carousel {
 			this.container.appendChild(clone);
 		}
 		this.items = this.container.querySelectorAll('.carousel__slide');
+		// 初期位置: アクティブスライドを中央に
+		this.w = parseInt(getComputedStyle(this.slider).getPropertyValue('--itemW'), 10);
+		const toCenterPos = (index) => 50 - this.w * (index + 0.5);
+		this.container.animate(
+			[
+				{ 
+					translate: `${toCenterPos(this.active)}% 0` 
+				}
+			],
+			{
+				duration: 0, fill: 'forwards' 
+			}
+		);
 		// active
-		this.activeChange(this.active);	
+		this.activeChange(this.active);
 		// control
 		this.control();
 	}
 	change(number, direction) {
 		if( this.changing ) return;
-		const w = parseInt(getComputedStyle(this.slider).getPropertyValue('--itemW'), 10);
 		const easing = getComputedStyle(this.slider).getPropertyValue('--easing');
 		const duration = parseInt(getComputedStyle(this.slider).getPropertyValue('--duration'), 10);
 		this.changing = true;
-		let next = (this.active + direction * number) % this.length;
-		if( next < 0 ) {
-			next = this.length - 1;
+		let nextIndex = (this.active + direction * number) % this.length;
+		if( nextIndex < 0 ) {
+			nextIndex = this.length - 1;
 		}
-		this.activeChange(next);
-		let start = this.active * w;
-		if( this.active == 0 && direction < 0 ) {
-			start = 100;
-		} else if( this.active == this.length - 1 && direction > 0 ) {
-			start = -1 * w;
+		this.activeChange(nextIndex);
+		// アクティブスライドを画面中央に配置: translate = (50 - w*(N + 0.5))%
+		// 2番目のinnerが0-100%、1番目が-100-0%、3番目が100-200%
+		const toCenterPos = (index) => 50 - this.w * (index + 0.5);
+		let startPos = toCenterPos(this.active);
+		let endPos = toCenterPos(nextIndex);
+		// ラップ時: 隣のinnerのスライドへ遷移
+		if( this.active === 0 && direction < 0 ) {
+			// 先頭→末尾: 2番目の0 → 1番目の4
+			startPos = toCenterPos(0);
+			endPos = toCenterPos(this.length - 1) + 100; // 1番目のinner
+		} else if( this.active === this.length - 1 && direction > 0 ) {
+			// 末尾→先頭: 2番目の4 → 3番目の0
+			startPos = toCenterPos(this.length - 1);
+			endPos = toCenterPos(0) - 100; // 3番目のinner
 		}
-		const end = `${next * w}%`;
-		console.log(`start:${start}`);
-		console.log(`end:${end}`);
+		const isWrapPrev = this.active === 0 && direction < 0;
+		const isWrapNext = this.active === this.length - 1 && direction > 0;
+
 		const animation = this.container.animate([
 			{
-				translate: `${-1* start}% 0`
+				translate: `${startPos}% 0`
 			},
 			{
-				translate: `${end} 0`
+				translate: `${endPos}% 0`
 			},
 		], {
 			easing: easing,
@@ -58,7 +80,23 @@ class Carousel {
 		});
 		animation.onfinish = ()=>{
 			this.changing = false;
-			this.active = next;
+			this.active = nextIndex;
+			const toCenter = (i) => 50 - this.w * (i + 0.5);
+			if( isWrapNext ) {
+				this.container.animate(
+				[
+					{
+						 translate: `${endPos}% 0` 
+					},
+					{
+						translate: `${toCenter(0)}% 0`
+					},
+				], 
+				{
+					duration: 0,
+					fill: 'forwards'
+				});
+			}
 		};
 	}
 	activeChange(index) {

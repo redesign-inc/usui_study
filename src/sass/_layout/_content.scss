@@ -1,32 +1,126 @@
 @use '../_foundation/global' as g;
 
+#faq_lists > div > div > div > div > span:nth-child(1) {
+    -webkit-text-stroke: 1px var(--s-color-6e9b144a);
+    text-stroke: 1px var(--s-color-6e9b144a);
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+section {
+    display: grid;
+    align-content: center;
+    height: 100svh;
+}
+
 #canvas {
     width: 100% !important;
     height: 100svh !important;
 }
 nav {
-    width: 100vw;
-    height: 100svh;
     display: grid;
-    place-content: center;
+    align-content: start;
     ul {
         display: grid;
         align-items: center;
         row-gap: 1rem;
+        width: max-content;
         li {
-            text-align: center;
+            display: grid;
             a {
                 font-size: 3rem;
                 text-decoration: none;
                 border: solid 1px;
-                display: block;
                 line-height: 1;
                 width: 100%;
                 box-sizing: border-box;
                 padding: 1rem;
+                > span {
+                    display: inline grid;
+                    overflow: clip;
+                    > span {
+                        text-shadow: 0 1.2lh oklch(.8 .2 248deg);
+                        transition: translate 200ms ease-out;
+                    }
+                }
+                @media (hover:hover) {
+                    &:hover {
+                        span {
+                            span {
+                                translate: 0 -1.2lh;
+                            }
+                        }
+                    }
+                }
             }
         }
     }
+}
+
+//masonry
+.masonry {
+    display: grid-lanes;
+    grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
+    gap: 1rem;
+    flow-tolerance: 1;
+    @supports not (display: grid-lanes) {
+        display: grid;
+    }
+}
+
+//parallax
+.parallax {
+    display: grid;
+    justify-content: center;
+    gap: 2rem;
+    img {
+        width: 100%;
+        aspect-ratio: 16/9;
+        object-fit: cover;
+        animation: --parallax linear both;
+        animation-timeline: view();
+        &:nth-child(even) {
+            grid-column: 1/2;
+        }
+        &:nth-child(odd) {
+            grid-column: 2/3;
+        }
+        &:nth-child(3) {
+            grid-row: 3/4;
+        } 
+        &:nth-child(4) {
+            grid-row: 4/5;
+        } 
+        &:nth-child(5) {
+            grid-row: 5/6;
+        } 
+    }
+}
+
+@keyframes --parallax {
+    from {
+        object-position: 0 0px;
+    }
+    to {
+        object-position: 0 100px;
+    }
+}
+
+//attr()
+li {
+    &::before {
+        content: attr(data-fruit);
+    }
+}
+.entry {
+  color: var(--color, black);
+  border: 1px solid var(--color, black)
+}
+
+.aaaaa {
+    color: attr(data-color color, pink);
 }
 // TB
 @media only screen and (max-width:g.$size-tb) {}

@@ -1,6 +1,7 @@
 @use '../../_foundation/global' as g;
 
 .carousel {
+  view-transition-name: example-1;
   --length: 5;
   --itemW: 20;
   --duration: 500;
@@ -8,30 +9,30 @@
   width: 100%;
   position: relative;
   overflow: hidden;
-  translate: 0 calc(50vh - 50%);
   &__container {
     display: flex;
     justify-content: center;
+    height: 50vh;
+    box-sizing: border-box;
   }
   &__inner {
     display: flex;
     flex-shrink: 0;
     width: 100%;
     height: 100%;
-    translate: calc(50% - calc((100 - var(--itemW) * (var(--length) - 1)) * 1%)/2) 0;
   }
   &__slide {
-    transition: width calc(var(--duration) * 1ms) var(--easing) 0s;
-    width: calc(var(--itemW) * 1rem);
+    width: calc(var(--itemW) * 1%);
     color: #fff;
     font-size: 16px;
     display: grid;
     place-content: center;
     text-align: center;
     background-color: #000;
-    margin-inline: 1rem;
+    opacity: .7;
+    transition: opacity .4s ease-out 0s;   
     &.active {
-      width: calc((100 - var(--itemW) * (var(--length) - 1)) * 1%);
+      opacity: 1;
     }
   }
   &__next {

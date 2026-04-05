@@ -2,8 +2,8 @@
 require('includes.php');
 $pageinfo = array(
     'lang' => 'ja',
-    'title' => 'タイトル',
-    'description' => 'テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト',
+    'title' => 'ホーム',
+    'description' => '',
 );
 set_query_var('pageinfo', $pageinfo);
 get_header();
@@ -22,12 +22,9 @@ $result = array_values($result);
         <ul>
 <?php foreach ($result as $dir): ?>
             <li>
-                <a interestfor="tip-anchor" href="/<?php echo htmlspecialchars($dir); ?>/"><?php echo htmlspecialchars($dir); ?></a>
+                <a interestfor="tip-anchor" href="/<?php echo htmlspecialchars($dir); ?>/"><span><span><?php echo htmlspecialchars($dir); ?></span></span></a>
             </li>
 <?php endforeach; ?>
         </ul>
     </nav>
-
 </main>
-
-<?php get_footer(); ?>

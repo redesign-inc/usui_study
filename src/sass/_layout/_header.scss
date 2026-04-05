@@ -1,5 +1,8 @@
 @use '../_foundation/global' as g;
 
+header {
+    text-align: center;
+}
 // TB
 @media only screen and (max-width:g.$size-tb) {}
 // SP
