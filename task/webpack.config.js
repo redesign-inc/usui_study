@@ -17,6 +17,9 @@ module.exports = async ()=>{
 			path: config.js.dest,
 			filename: '[name].js'
 		},
+		experiments: {
+			topLevelAwait: true
+		},
 		module: {
 			rules: [
 				{

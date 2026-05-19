@@ -2,15 +2,12 @@
 require('../includes.php');
 $pageinfo = array(
     'lang' => 'ja',
-    'title' => 'タイトル',
-    'description' => 'テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト',
+    'title' => 'three',
+    'description' => 'three',
+    'bodyClass' => 'three-carousel',
 );
 set_query_var('pageinfo', $pageinfo);
 get_header();
 ?>
-
-<main>
-    <div id="webgl"></div>
-</main>
 
 <?php get_footer(); ?>

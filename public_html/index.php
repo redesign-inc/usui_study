@@ -22,7 +22,7 @@ $result = array_values($result);
         <ul>
 <?php foreach ($result as $dir): ?>
             <li>
-                <a interestfor="tip-anchor" href="/<?php echo htmlspecialchars($dir); ?>/"><span><span><?php echo htmlspecialchars($dir); ?></span></span></a>
+                <a interestfor="tip-anchor" href="/<?php echo htmlspecialchars($dir); ?>/"><span><span><?php echo htmlspecialchars(mb_strimwidth($dir, 0, 20, '...')); ?></span></span></a>
             </li>
 <?php endforeach; ?>
         </ul>

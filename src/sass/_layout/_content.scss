@@ -20,9 +20,13 @@ section {
     height: 100svh !important;
 }
 nav {
+    width: 100%;
+    height: 100svh;
     display: grid;
     align-content: start;
     ul {
+      width: 100%;
+      height: 100%;
         display: grid;
         align-items: center;
         row-gap: 1rem;
@@ -118,10 +122,268 @@ li {
   color: var(--color, black);
   border: 1px solid var(--color, black)
 }
-
 .aaaaa {
     color: attr(data-color color, pink);
 }
+:root {
+  --color-primary: #3223b3;
+  --color-secondary: #7c71f6;
+  --color-primary-light: #ebe9fc;
+  --color-text: #404040;
+  --color-text-muted: #808080;
+  --color-border: #d0d0d0;
+  --color-white: #ffffff;
+}
+//anker
+.recipe-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  max-width: 960px;
+}
+
+.progress {
+  position: sticky;
+  top: 0;
+  height: fit-content;
+  display: grid;
+  padding: 60px 24px;
+  scroll-target-group: auto;
+}
+
+.progress__item {
+  position: relative;
+
+  &:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 24px;
+    left: 27px;
+    width: 1px;
+    height: 0;
+    background-color: var(--color-border);
+    transition: height 0.2s ease;
+  }
+
+  /* step間の縦線を表示 */
+  &:has(.progress__link:target-before)::after {
+    height: 100%;
+  }
+}
+
+.progress__link {
+  display: grid;
+  grid-template-columns: 58px auto;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  position: relative;
+  padding-bottom: 36px;
+  color: var(--color-text);
+
+  /* スクロール通過ずみ */
+  &:target-before {
+    color: var(--color-text-muted);
+
+    /* ✔️アイコンを表示 */
+    .progress__text::after {
+      content: "✔️";
+      position: absolute;
+      top: 0;
+      right: -18px;
+    }
+
+    .progress__badge {
+      color: var(--color-text-muted);
+    }
+  }
+
+  /* 現在表示中 */
+  &:target-current {
+    color: var(--color-primary);
+
+    .progress__badge {
+      background-color: var(--color-primary);
+      color: var(--color-white);
+      border-color: transparent;
+    }
+  }
+
+  /* スクロール未到達 */
+  &:target-after {
+    color: var(--color-text);
+  }
+}
+
+.progress__badge {
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-white);
+  font-size: 12px;
+  padding: 2px 0;
+  color: var(--color-text);
+  text-align: center;
+}
+
+.progress__text {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  font-size: 14px;
+  position: relative;
+  width: fit-content;
+}
+
+.progress__time {
+  font-size: 12px;
+}
+
+.recipe-main {
+  padding: 60px 24px 60px 0;
+}
+
+.recipe-title {
+  font-size: 28px;
+  color: var(--color-primary);
+  margin-bottom: 8px;
+}
+
+.recipe-title__lead {
+  margin-bottom: 24px;
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.recipe-intro {
+  display: grid;
+  gap: 4px;
+}
+
+.recipe-intro__title {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.recipe-intro__list {
+  display: grid;
+  gap: 4px;
+  font-size: 14px;
+
+  li {
+    list-style: disc;
+    margin-left: 16px;
+  }
+}
+
+.recipe-step {
+  padding: 48px 0;
+}
+
+.recipe-step__title {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-size: 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.recipe-step__label {
+  color: var(--color-primary);
+  font-size: 14px;
+}
+
+.recipe-step__time {
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.recipe-step__image {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  background-color: var(--color-border);
+}
+
+.recipe-step__content {
+  padding: 20px 0;
+}
+
+.recipe-step__list {
+  display: grid;
+  gap: 12px;
+  font-size: 16px;
+}
+
+.recipe-step__item {
+  list-style: decimal;
+  margin-left: 16px;
+}
+
+@media (max-width: 840px) {
+  .recipe-layout {
+    grid-template-columns: 140px 1fr;
+  }
+
+  .progress__item {
+    position: relative;
+
+    &:not(:last-child)::after {
+      left: 10px;
+    }
+  }
+
+  .progress__link {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding-bottom: 24px;
+  }
+
+  .progress__text {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 16px;
+  }
+
+  .recipe-step__title {
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+
+//css_allow-discrete @starting-style
+.modal {
+  color: #fff;
+  font-size: 5rem;
+  width: 100%;  
+  display: flex;
+  justify-content: center;
+  opacity: 1;
+  background-color: red;
+  padding-block: 10rem;
+  transition: all 0.3s ease discrete;
+  transition-property: opacity, display;
+  &.is-hidden {
+    display: none;
+    opacity: 0;
+  }
+}
+.btn {
+  position: fixed;
+  top: 0;
+  right: 0;
+  font-size: 5rem;
+  background-color: red;
+  width: fit-content;
+  margin: 5rem auto 0;
+  cursor: pointer;  
+}
+@starting-style {
+  .modal {
+    opacity: 0;
+  }
+}
+
 // TB
 @media only screen and (max-width:g.$size-tb) {}
 // SP

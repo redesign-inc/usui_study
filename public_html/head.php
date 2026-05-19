@@ -17,6 +17,6 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" media="all" href="/assets/css/main.css">
 </head>
-<body>
+<body class="<?php echo $pageinfo['bodyClass']; ?>">
 <div id="wrapper">
 <header>ヘッダー</header>

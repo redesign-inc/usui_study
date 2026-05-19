@@ -12,6 +12,7 @@ class Carousel {
 		this.prev = this.slider.querySelector('.carousel__prev');
 		this.next = this.slider.querySelector('.carousel__next');
 		this.init();
+
 	}
 	init(){
 		const group = this.container.querySelector('.carousel__inner');

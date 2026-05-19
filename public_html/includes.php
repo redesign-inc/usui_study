@@ -6,6 +6,7 @@ $query_var = array(
         'title' => '',
         'description' => '',
         'url' => '',
+        'bodyClass' => '',
     )
 );
 

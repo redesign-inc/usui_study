@@ -10,6 +10,9 @@ import Oasobi from './Oasobi';
 import Carousel from './Carousel';
 import CarouselFade from './CarouselFade';
 import CarouselProgress from './CarouselProgress';
+import startingStyle from './startingStyle';
+import Module from './Module';
+import CarouselClipPath from './CarouselClipPath';
 
 class App {
 	constructor(){
@@ -22,12 +25,15 @@ class App {
 	render(){
 		HtmlClass.render();
 		SmoothScroll.render('.ss');
-		new ThreeApp();
+		// new ThreeApp();
 		new Popover();
 		new Oasobi();
 		new Carousel();
 		new CarouselFade();
 		new CarouselProgress();
+		new startingStyle();
+		new Module();
+		new CarouselClipPath();
 	}
 }
 
