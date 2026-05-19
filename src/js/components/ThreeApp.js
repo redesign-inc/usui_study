@@ -3,14 +3,13 @@
 import * as THREE from 'three';
 import gsap from "gsap";
 
-/** 背景画像のパス */
 const URL_BG = "/assets/imgs/bg.avif";
 /** 平面の横幅 */
 const ITEM_W = 256;
 /** 平面の縦幅 */
 const ITEM_H = 256;
 /** 平面のX座標の間隔 */
-const MARGIN_X = 80;
+const MARGIN_X = 200;
 /** スライドの総数 */
 const MAX_SLIDE = 4;
 /** アニメーションの持続時間 */
@@ -20,118 +19,112 @@ const ROTATION_DURATION = 0.9;
 /** アニメーションのイージング */
 const ANIMATION_EASE = "expo.out";
 
-/**
- * グローバル変数
- */
-/** 現在の仮想的なスライド位置（無限に増減する実数） */
+/** グローバル変数 */
 let currentProgress = 0;
-/** 現在の中心にあるスライドID（0 〜 MAX_SLIDE-1） */
 let currentPage = 0;
-
-/**
- * 平面を格納する配列
- * @type {Card[]}
- */
 const cards = [];
 
-/**
- * シーン、カメラ、レンダラーの初期化
- */
+const textureLoader = new THREE.TextureLoader();
+
+/** シーン、カメラ、レンダラーの初期化 */
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(30);
+const camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 1, 5000);
 scene.add(camera);
 
-const renderer = new THREE.WebGLRenderer({ 
-  antialias: true 
-});
-renderer.setPixelRatio(devicePixelRatio);
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // パフォーマンス考慮
+renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-/**
- * タッチ操作の状態管理
- */
+/** タッチ・ホイール操作の状態管理 */
 let touchStartX = 0;
 let touchStartValue = 0;
+let snapTween = null; // スナップ用のアニメーション保持
 
-/**
- * イベントリスナーの設定
- */
-window.addEventListener("wheel", onWheel, { 
-  passive: false 
-});
-renderer.domElement.addEventListener("touchstart", onTouchStart, {
-  passive: true,
-});
-renderer.domElement.addEventListener("touchmove", onTouchMove, {
-  passive: false,
-});
+/** イベントリスナーの設定 */
+window.addEventListener("wheel", onWheel, { passive: false });
+renderer.domElement.addEventListener("touchstart", onTouchStart, { passive: true });
+renderer.domElement.addEventListener("touchmove", onTouchMove, { passive: false });
+renderer.domElement.addEventListener("touchend", onTouchEnd, { passive: true });
 window.addEventListener("resize", onResize);
 
-/**
- * ユーティリティ: 適切な剰余算 (マイナス値に対応)
- */
 function modulo(n, m) {
   return ((n % m) + m) % m;
 }
 
-/**
- * マウスホイールイベントハンドラー
- */
+/** マウスホイールイベント */
 function onWheel(event) {
-  // 制限なく値を増減させる
-  currentProgress += event.deltaY * 0.005;
-  updateSlides();
   event.preventDefault();
+  
+  // スナップ中のアニメーションがあれば殺す
+  if (snapTween) snapTween.kill();
+
+  currentProgress += event.deltaY * 0.002; // 感度を少しマイルドに調整
+  updateSlides();
+
+  // スクロール停止を検知してスナップさせる（デバウンス処理）
+  clearTimeout(window.wheelTimeout);
+  window.wheelTimeout = setTimeout(() => {
+    snapToNearest();
+  }, 10);
 }
 
-/**
- * タッチ開始イベントハンドラー
- */
+/** タッチ開始 */
 function onTouchStart(event) {
+  if (snapTween) snapTween.kill();
   touchStartX = event.touches[0].clientX;
   touchStartValue = currentProgress;
 }
 
-/**
- * タッチ移動イベントハンドラー
- */
+/** タッチ移動 */
 function onTouchMove(event) {
-
   const touchX = event.touches[0].clientX;
   const deltaX = touchX - touchStartX;
 
-  // 制限（Math.max / Math.min）を解除して無限に動かせるようにする
-  currentProgress = touchStartValue - deltaX / (ITEM_W * 0.7);
+  // 移動量に合わせて進捗を更新
+  currentProgress = touchStartValue - deltaX / (ITEM_W * .1);
   updateSlides();
-
+  
   event.preventDefault();
 }
 
+/** タッチ終了（指を離した時にピタッと止める） */
+function onTouchEnd() {
+  snapToNearest();
+}
 
 /**
- * 進捗状況から全スライドの位置を更新・アニメーション
+ * 最寄りのスライド位置に綺麗に吸い付かせる処理
  */
-function updateSlides() {
-  // 現在の進捗に最も近い整数（ターゲットID）を割り出す
+function snapToNearest() {
   const targetId = Math.round(currentProgress);
   
-  // 実際のページID（0 〜 MAX_SLIDE-1）に丸める
-  const pageId = modulo(targetId, MAX_SLIDE);
+  // GSAPで現在のprogressを整数の位置までアニメーションさせる
+  snapTween = gsap.to({ value: currentProgress }, {
+    value: targetId,
+    duration: 0.6,
+    ease: "power2.out",
+    onUpdate: function () {
+      currentProgress = this.targets()[0].value;
+      updateSlides();
+    }
+  });
+}
 
-  // 各カードの配置を計算してアニメーション
+/** 全スライドの位置を更新 */
+function updateSlides() {
+  const targetId = Math.round(currentProgress);
+  currentPage = modulo(targetId, MAX_SLIDE);
+
   cards.forEach((card, i) => {
-    const {
-      x: targetX,
-      z: targetZ,
-      rotation: targetRot,
-    } = calculateCardPosition(i, currentProgress);
+    const { x: targetX, z: targetZ, rotation: targetRot } = calculateCardPosition(i, currentProgress);
 
     gsap.to(card.position, {
       x: targetX,
       z: -1 * targetZ,
       duration: ANIMATION_DURATION,
       ease: ANIMATION_EASE,
-      overwrite: "auto", // 重複アニメーションの最適化
+      overwrite: "auto",
     });
 
     gsap.to(card.rotation, {
@@ -143,105 +136,83 @@ function updateSlides() {
   });
 }
 
-/**
- * 無限ループを考慮したカードの位置と回転を計算
- * @param {number} index - カードの固有インデックス (0 ~ MAX_SLIDE-1)
- * @param {number} progress - 現在のスクロール進捗（小数点を含む実数）
- */
+/** カードの位置と回転を計算（提示コードのロジックを踏襲） */
 function calculateCardPosition(index, progress) {
-  // progress（中心位置）に対する、このカードの相対位置を計算
-  // 無限ループさせるため、最も近い「周期」の位置にカードをずらす
   let diff = index - (progress % MAX_SLIDE);
-  
-  // 画面外に消えたカードを逆サイドに回り込ませる判定
+
   const half = MAX_SLIDE / 2;
   if (diff > half) diff -= MAX_SLIDE;
   if (diff < -half) diff += MAX_SLIDE;
 
-  // 相対位置（diff）を元にX座標を計算
   let targetX = MARGIN_X * diff;
   let targetZ = 0;
   let targetRot = 0;
 
-  // カバーフロー特有の左右の傾きを、閾値（0.1など）や滑らかな傾斜で表現
-  const threshold = 0.1; 
+  const threshold = 0.1;
+
   if (diff < -threshold) {
-    targetX -= ITEM_W * 0.6;
-    targetZ = ITEM_W;
+    targetX -= ITEM_W * 0.4; // 重なり具合を微調整
+    targetZ = ITEM_W * 1.2;
     targetRot = +45 * (Math.PI / 180);
   } else if (diff > threshold) {
-    targetX += ITEM_W * 0.6;
-    targetZ = ITEM_W;
+    targetX += ITEM_W * 0.4;
+    targetZ = ITEM_W * 1.2;
     targetRot = -45 * (Math.PI / 180);
   } else {
-    // 中心付近にいるときは、diffに応じて滑らかに回転とZ深度を戻す
-    const ratio = diff / threshold; // -1 〜 1
-    // 必要に応じて中心の滑らかな補間をここに追加可能
+    const ratio = diff / threshold;
+    targetRot = -ratio * 45 * (Math.PI / 180);
   }
 
   return { x: targetX, z: targetZ, rotation: targetRot };
 }
 
-/**
- * リサイズイベントハンドラー
- */
 function onResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
 }
 
-/**
- * アニメーションループ
- */
 function tick() {
   renderer.render(scene, camera);
   requestAnimationFrame(tick);
 }
 
-/**
- * カバーフローのカードクラス
- */
+/** カルーセルのカードクラス */
 class Card extends THREE.Object3D {
   constructor(index) {
     super();
 
-    const texture = new THREE.TextureLoader().load(`/assets/imgs/${index}.avif`);
+    // テスト用に非同期でダミー画像（Lorem Picsum）を読み込み
+    const texture = textureLoader.load(`/assets/imgs/${index}.avif`);
     texture.colorSpace = THREE.SRGBColorSpace;
 
-    // 上面
-    const material = new THREE.MeshLambertMaterial({ map: texture });
-    const planeTop = new THREE.Mesh(
-      new THREE.PlaneGeometry(ITEM_W, ITEM_H),
-      material
-    );
+    // 表面
+    const material = new THREE.MeshStandardMaterial({ map: texture, side: THREE.DoubleSide });
+    const planeTop = new THREE.Mesh(new THREE.PlaneGeometry(ITEM_W, ITEM_H), material);
     this.add(planeTop);
 
-    // 反射面
-    const materialOpt = new THREE.MeshLambertMaterial({
+    // 反射面（床への映り込み風表現）
+    const materialOpt = new THREE.MeshStandardMaterial({
       map: texture,
       transparent: true,
-      side: THREE.BackSide,
-      opacity: .5,
+      side: THREE.DoubleSide,
+      opacity: 0.4, // ギラつきすぎないよう少し薄く
     });
-    const planeBottom = new THREE.Mesh(
-      new THREE.PlaneGeometry(ITEM_W, ITEM_H),
-      materialOpt
-    );
-    planeBottom.rotation.y = Math.PI;
-    planeBottom.rotation.z = Math.PI;
-    planeBottom.position.y = -ITEM_H - 1;
+    const planeBottom = new THREE.Mesh(new THREE.PlaneGeometry(ITEM_W, ITEM_H), materialOpt);
+    planeBottom.rotation.x = Math.PI; // 上下反転
+    planeBottom.position.y = -ITEM_H - 2;
     this.add(planeBottom);
   }
 }
 
-/**
- * 初期化処理
- */
+/** 初期化処理 */
 async function init() {
-  // ライトの設定
-  const pointLight = new THREE.PointLight(0xffffff, 1000000, 1000);
-  pointLight.position.set(0, 0, 500);
+  // 環境光とスポットライトを追加して質感をアップ
+  const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+  scene.add(ambientLight);
+
+  const pointLight = new THREE.PointLight(0xffffff, 1.5, 2000);
+  pointLight.position.set(0, 200, 600);
   scene.add(pointLight);
 
   // カードの生成
@@ -251,26 +222,23 @@ async function init() {
     cards[i] = card;
   }
 
-  // カメラの位置設定
-  camera.position.z = 1000;
-  camera.lookAt(new THREE.Vector3(0, 0, 0));
+  camera.position.set(0, 0, 900);
+  camera.lookAt(0, 0, 0);
 
   // 背景の生成
-  const bgTexture = new THREE.TextureLoader().load(URL_BG);
+  const bgTexture = textureLoader.load(URL_BG);
   bgTexture.colorSpace = THREE.SRGBColorSpace;
   const meshBg = new THREE.Mesh(
-    new THREE.PlaneGeometry(3000, 1000),
-    new THREE.MeshBasicMaterial({ map: bgTexture })
+    new THREE.PlaneGeometry(4000, 2000),
+    new THREE.MeshBasicMaterial({ map: bgTexture, color: 0x333333 }) // 背景を少し暗くして手前を引き立てる
   );
-  meshBg.position.z = -500;
+  meshBg.position.z = -800;
   scene.add(meshBg);
 
-  // 初期表示（真ん中の位置からスタート）
-  currentProgress = MAX_SLIDE / 2;
+  currentProgress = 0;
   updateSlides();
   onResize();
   tick();
 }
 
-// アプリケーションの開始
 init();
