@@ -6,6 +6,10 @@ img {
 }
 
 .js_imagesLoaded {
+  cursor: progress;
+  &:has(.js_imagesLoaded__opening.is-loaded) {
+    cursor: auto;
+  }
   &__opening {
     color: #fff;
     font-size: 5rem;
@@ -21,6 +25,7 @@ img {
     background-color: red;
     pointer-events: none;
     transition: opacity 0.5s ease;
+    z-index: 100;
     &.is-loaded {
       opacity: 0;
       pointer-events: none;

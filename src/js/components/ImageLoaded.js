@@ -20,7 +20,7 @@ class ImageLoaded {
       '/assets/imgs/3.png',
       '/assets/imgs/4.png',
     ];
-    const sets = 30000;
+    const sets = 10000;
     for(let i = 0; i < sets; i++) {
       for(let j = 0; j < imgs.length; j++) {
         const img = document.createElement('img');
@@ -38,8 +38,6 @@ class ImageLoaded {
     const renderProgress = () => {
       if(displayedPercent < targetPercent) {
         displayedPercent += 1;
-      } else if(displayedPercent > targetPercent) {
-        displayedPercent -= 1;
       }
 
       opening.textContent = `${displayedPercent}%`;
