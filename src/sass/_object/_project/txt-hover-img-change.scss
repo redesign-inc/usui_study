@@ -1,0 +1,38 @@
+@use '../../_foundation/global' as g;
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.txt-hover-img-change {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: 10rem;
+  .txt {
+    display: grid;
+    row-gap: 5rem;
+    .p {
+      color: #000;
+      font-size: 2rem;
+    }
+  }
+  .imgs {
+    width: 50rem;
+    height: 50rem;
+    overflow: hidden;
+    display: grid;
+    img {
+      height: 100%;
+      grid-column: 1/-1;
+      grid-row: 1/-1;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity .4s ease-out;
+      &.is-current {
+        opacity: 1;
+      }
+    }
+  }
+}

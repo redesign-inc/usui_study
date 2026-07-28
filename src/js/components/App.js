@@ -6,34 +6,36 @@ import HtmlClass from '../util/HtmlClass';
 import SmoothScroll from '../util/SmoothScroll';
 import ThreeApp from './ThreeApp';
 import Popover from './Popover';
-import Oasobi from './Oasobi';
+import ImageLoaded from './ImageLoaded';
 import Carousel from './Carousel';
+import Carousel02 from './Carousel02';
 import CarouselFade from './CarouselFade';
 import CarouselProgress from './CarouselProgress';
 import startingStyle from './startingStyle';
 import Module from './Module';
 import CarouselClipPath from './CarouselClipPath';
+import Hover from './Hover';
 
 class App {
 	constructor(){
 		this.html = document.querySelector('html');
 		this.Config = Config;
 		this.Util = new Util();
-		this.weather;
 	}
 
 	render(){
 		HtmlClass.render();
 		SmoothScroll.render('.ss');
-		// new ThreeApp();
+		new ThreeApp();
 		new Popover();
-		new Oasobi();
-		new Carousel();
+		new ImageLoaded();
+		new Carousel02();
 		new CarouselFade();
 		new CarouselProgress();
 		new startingStyle();
 		new Module();
 		new CarouselClipPath();
+		new Hover();
 	}
 }
 

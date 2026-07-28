@@ -116,4 +116,112 @@
       }
     }
   }
+  // カルーセル０２
+  &02 {
+    --length: 3;
+    --itemW: 20;
+    --duration: 500;
+    --easing: ease-out;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    &__container {
+      display: flex;
+      justify-content: center;
+      height: 50vh;
+      box-sizing: border-box;
+    }
+    &__inner {
+      display: flex;
+      flex-shrink: 0;
+      width: 100%;
+      height: 100%;
+    }
+    &__slide {
+      width: calc(100% / var(--length));
+      color: #fff;
+      font-size: 16px;
+      display: grid;
+      place-content: center;
+      text-align: center;
+      background-color: #000; 
+      position: relative;
+      opacity: .7;
+      transition: opacity .4s ease-out 0s;   
+      &::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        border: 2px solid #fff;
+        transition: opacity .4s ease-out 0s;
+      }
+      &.active {
+        opacity: 1;
+        &::before {
+          opacity: 0;
+        }        
+      }
+    }
+    &__next {
+      position: absolute;
+      right: 10px;
+      bottom: 50%;
+      z-index: 10;
+      cursor: pointer;
+      transform: rotate(45deg) translateY(50%);
+      display: grid;
+      place-content: center;
+      &::before {
+        content: '';
+        display: block;
+        width: 5rem;
+        height: 5rem;
+        background-color: #fff;
+        border-radius: 50%;
+        grid-column: 1/-1;
+        grid-row: 1/-1;
+      }
+      &::after {
+        content: '';
+        display: block;
+        border-top: solid 2rem #000;
+        border-right: solid 2rem #000;
+        background-color: #fff;
+        grid-column: 1/-1;
+        grid-row: 1/-1;
+        scale: 0.3;
+      }
+    }
+    &__prev {
+      position: absolute;
+      left: 25px;
+      bottom: 50%;
+      z-index: 10;
+      cursor: pointer;
+      transform: rotate(-135deg) translateY(-50%);
+      display: grid;
+      &::before {
+        content: '';
+        display: block;
+        width: 5rem;
+        height: 5rem;
+        background-color: #fff;
+        border-radius: 50%;
+        grid-column: 1/-1;
+        grid-row: 1/-1;
+      }
+      &::after {
+        content: '';
+        display: block;
+        border-top: solid 2rem #000;
+        border-right: solid 2rem #000;
+        background-color: #fff;
+        grid-column: 1/-1;
+        grid-row: 1/-1;
+        scale: 0.3;
+      }    
+    }    
+  }
 }
