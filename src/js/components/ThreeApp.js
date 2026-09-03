@@ -570,27 +570,27 @@ class ThreeApp {
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
 
-  function raycast(event) {
-    // Canvas要素のスクリーン上の正確な領域を取得
-    // 例: 親要素のサイズに合わせる場合
-    const rect = imgArea.getBoundingClientRect();
-    renderer.setSize(rect.width, rect.height);
-    camera.aspect = rect.width / rect.height;
-    camera.updateProjectionMatrix();
+    function raycast(event) {
+      // Canvas要素のスクリーン上の正確な領域を取得
+      // 例: 親要素のサイズに合わせる場合
+      const rect = imgArea.getBoundingClientRect();
+      renderer.setSize(rect.width, rect.height);
+      camera.aspect = rect.width / rect.height;
+      camera.updateProjectionMatrix();
 
-    // Canvas内のローカルなマウス位置（px）を計算
-    const x = event.clientX - rect.left;
-    // ※上下反転に対応するため、rect.bottom から計算します
-    const y = event.clientY - rect.top;
+      // Canvas内のローカルなマウス位置（px）を計算
+      const x = event.clientX - rect.left;
+      // ※上下反転に対応するため、rect.bottom から計算します
+      const y = event.clientY - rect.top;
 
-    // -1.0 ～ +1.0 の正規化デバイス座標（NDC）に変換
-    mouse.x = (x / rect.width) * 2 - 1;
-    mouse.y = -(y / rect.height) * 2 + 1;
+      // -1.0 ～ +1.0 の正規化デバイス座標（NDC）に変換
+      mouse.x = (x / rect.width) * 2 - 1;
+      mouse.y = -(y / rect.height) * 2 + 1;
 
-    raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObjects(svgGroup.children, true);
-    return intersects;
-  }
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(svgGroup.children, true);
+      return intersects;
+    }
 
     function getDataCodeCenter(dataCode, fallbackMesh) {
       const fallbackCenter = new THREE.Vector3();
@@ -779,13 +779,14 @@ class ThreeApp {
 
       titleEl.innerText = data.title;
       descEl.innerText = data.desc;
-      // ui.style.display = "flex";
-      // gsap.fromTo(ui, { 
-      //   opacity: 0 
-      // }, { 
-      //   opacity: 1, 
-      //   duration: 0.35 
-      // });
+      ui.style.display = "flex";
+      gsap.fromTo(ui, { 
+        opacity: 0 
+      }, { 
+        opacity: 1, 
+        duration: .5,
+        ease: "power2.out"
+      });
     }
 
     // ★修正: ホバー時も、同じdataCodeの全メッシュを一括でグレーにする

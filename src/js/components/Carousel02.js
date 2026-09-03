@@ -2,7 +2,7 @@
 
 class Carousel02 {
 	constructor(){
-		this.init();
+		// this.init();
 
 	}
 	init(){

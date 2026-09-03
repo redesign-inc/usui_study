@@ -15,6 +15,8 @@ import startingStyle from './startingStyle';
 import Module from './Module';
 import CarouselClipPath from './CarouselClipPath';
 import Hover from './Hover';
+import { createApp } from 'vue'
+import Vue from './App.vue'
 
 class App {
 	constructor(){
@@ -36,6 +38,8 @@ class App {
 		new Module();
 		new CarouselClipPath();
 		new Hover();
+		const app = createApp(Vue);
+		app.mount('#app');
 	}
 }
 
