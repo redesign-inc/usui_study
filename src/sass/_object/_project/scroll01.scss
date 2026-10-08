@@ -1,0 +1,70 @@
+@use '../../_foundation/global' as g;
+
+.page-view {
+  background:
+    radial-gradient(circle at 10% 15%, #ffd6a5 0, rgba(255, 214, 165, 0) 35%),
+    radial-gradient(circle at 90% 20%, #9bf6ff 0, rgba(155, 246, 255, 0) 35%),
+    linear-gradient(180deg, #fff9f0 0%, #f6f9ff 100%);
+}
+
+.scroll-fv {
+  width: 100%;
+  height: 100svh;
+  background-color: rgba(0, 0, 0, 0.313);
+}
+.square {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100svh;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  &-border {
+    background-color: red;
+    transition: opacity .3s ease-out 0s;
+  }
+  //下
+  &.is-scrolled01 & {
+    &-border {
+      &:nth-child(odd) {
+        opacity: 0;
+      }
+    }
+  }
+  //右
+  &.is-scrolled02 & {
+    &-border {
+      &:nth-child(even) {
+        opacity: 0;
+      }
+    }
+  }
+  //上
+  &.is-scrolled03 &   {
+    &-border {
+      opacity: 0;
+    }
+  }
+}
+.scroll01 {
+  width: 100%;
+  height: 100svh;
+  opacity: .3;
+  display: grid;
+  place-content: center;
+  color: #fff;
+  font-size: 5rem;
+  &-1 {
+    background-color: red;
+  }
+  &-2 {
+    background-color: blue;
+  }
+  &-3 {
+    background-color: yellow;
+  }
+  &-4 {
+    background-color: green;
+  }
+}
